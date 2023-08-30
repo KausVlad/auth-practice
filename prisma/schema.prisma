@@ -11,9 +11,9 @@ datasource db {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  email         String   @unique
-  password_hash String
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  hashedPassword String   @map("hashed_password")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
 }
