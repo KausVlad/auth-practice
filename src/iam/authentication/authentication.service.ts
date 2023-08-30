@@ -15,8 +15,8 @@ export class AuthenticationService {
     private readonly hashingService: HashingService,
   ) {}
 
-  async singUp({ email, password }: SignUpDto) {
-    const uniqueUserCheck = await this.prisma.user.findFirst({
+  async signUp({ email, password }: SignUpDto) {
+    const uniqueUserCheck = await this.prisma.user.count({
       where: {
         email,
       },

@@ -6,9 +6,9 @@ import { SignUpDto } from './dto/sign-up.dto';
 export class AuthenticationController {
   constructor(private readonly authService: AuthenticationService) {}
 
-  @Post('singUp')
+  @Post('signUp')
   singUp(@Body() signUpDto: SignUpDto) {
-    return this.authService.singUp(signUpDto);
+    return this.authService.signUp(signUpDto);
   }
 
   @Post('signIn')
