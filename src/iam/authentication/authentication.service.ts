@@ -12,6 +12,8 @@ import { JwtService } from '@nestjs/jwt';
 import jwtConfig from '../config/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { IActiveUserData } from '../interfaces/active-user-data.interface';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthenticationService {
@@ -66,19 +68,54 @@ export class AuthenticationService {
       throw new UnauthorizedException('Invalid password');
     }
 
-    const accessToken = await this.jwtService.signAsync(
+    return await this.generateTokens(user);
+  }
+
+  async generateTokens(user: User) {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.signToken<Partial<IActiveUserData>>(
+        user.id,
+        this.jwtConfiguration.accessExpiresIn,
+        { email: user.email },
+      ),
+      this.signToken(user.id, this.jwtConfiguration.refreshExpiresIn),
+    ]);
+
+    return { accessToken, refreshToken };
+  }
+
+  async refreshTokens(refreshTokenDto: RefreshTokenDto) {
+    try {
+      const { sub } = await this.jwtService.verifyAsync<
+        Pick<IActiveUserData, 'sub'>
+      >(refreshTokenDto.refreshToken, {
+        secret: this.jwtConfiguration.secret,
+        audience: this.jwtConfiguration.audience,
+        issuer: this.jwtConfiguration.issuer,
+      });
+      const user = await this.prisma.user.findFirstOrThrow({
+        where: {
+          id: sub,
+        },
+      });
+      return this.generateTokens(user);
+    } catch (error) {
+      throw new UnauthorizedException(error);
+    }
+  }
+
+  private async signToken<T>(userId: number, expiresIn: number, payload?: T) {
+    return await this.jwtService.signAsync(
       {
-        sub: user.id,
-        email,
-      } as IActiveUserData,
+        sub: userId,
+        ...payload,
+      },
       {
         secret: this.jwtConfiguration.secret,
-        expiresIn: this.jwtConfiguration.expiresIn,
+        expiresIn: expiresIn,
         audience: this.jwtConfiguration.audience,
         issuer: this.jwtConfiguration.issuer,
       },
     );
-
-    return { accessToken };
   }
 }

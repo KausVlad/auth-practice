@@ -3,6 +3,7 @@ import { AuthenticationService } from './authentication.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { Auth } from '../decorators/auth.decorator';
 import { EnumAuthType } from '../enums/auth-type.enum';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Auth(EnumAuthType.None)
 @Controller('authentication')
@@ -18,6 +19,12 @@ export class AuthenticationController {
   @Post('signIn')
   signIn(@Body() signInDto: SignUpDto) {
     return this.authService.signIn(signInDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('refreshTokens')
+  refreshTokens(@Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refreshTokens(refreshTokenDto);
   }
 
   // @HttpCode(HttpStatus.OK)
