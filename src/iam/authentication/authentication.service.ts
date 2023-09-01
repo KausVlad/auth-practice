@@ -84,7 +84,7 @@ export class AuthenticationService {
       this.signToken<Partial<IActiveUserData>>(
         user.id,
         this.jwtConfiguration.accessExpiresIn,
-        { email: user.email },
+        { email: user.email, role: user.role },
       ),
       this.signToken<IRefreshTokenId>(
         user.id,
