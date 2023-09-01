@@ -2,7 +2,7 @@ import { Reflector } from '@nestjs/core';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { EnumRole } from '@prisma/client';
-import { ROLES_KEY } from '../decorators/roles.decorators';
+import { ROLES_KEY } from '../decorators/roles.decorator';
 import { IActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
 import { REQUEST_USER_KEY } from 'src/iam/iam.constants';
 

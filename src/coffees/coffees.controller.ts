@@ -12,7 +12,7 @@ import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { ActiveUser } from 'src/iam/decorators/active-user.decorator';
 import { IActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
-import { Roles } from 'src/iam/authorization/decorators/roles.decorators';
+import { Roles } from 'src/iam/authorization/decorators/roles.decorator';
 
 @Controller('coffees')
 export class CoffeesController {

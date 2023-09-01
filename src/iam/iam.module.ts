@@ -31,6 +31,7 @@ import { RolesGuard } from './authorization/guards/roles.guard';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+      // useClass: PermissionsGuard,
     },
     AccessTokenGuard,
     RefreshTokenIdsStorage,
