@@ -17,6 +17,15 @@ model User {
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
   role           EnumRole @default(REGULAR)
+  ApiKey         ApiKey[]
+}
+
+model ApiKey {
+  id      Int    @id @default(autoincrement())
+  key     String @unique
+  uuid    String @unique
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id Int
 }
 
 enum EnumRole {

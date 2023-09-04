@@ -12,6 +12,7 @@ import { AuthenticationGuard } from './authentication/guards/authentication/auth
 import { AccessTokenGuard } from './authentication/guards/access-token.guard';
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage';
 import { RolesGuard } from './authorization/guards/roles.guard';
+import { ApiKeysService } from './authentication/api-keys.service';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { RolesGuard } from './authorization/guards/roles.guard';
     AccessTokenGuard,
     RefreshTokenIdsStorage,
     AuthenticationService,
+    ApiKeysService,
   ],
   controllers: [AuthenticationController],
 })
