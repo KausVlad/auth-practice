@@ -19,7 +19,7 @@ import {
   invalidatedRefreshTokenError,
 } from './refresh-token-ids.storage';
 import { randomUUID } from 'crypto';
-import { IRefreshTokenId } from '../interfaces/refresh-еoken-id.interface';
+import { IRefreshTokenId } from '../interfaces/refresh-token-id.interface';
 
 @Injectable()
 export class AuthenticationService {
