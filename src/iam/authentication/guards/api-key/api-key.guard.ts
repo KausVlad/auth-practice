@@ -4,7 +4,6 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { Request } from 'express';
 import { ApiKeysService } from '../../api-keys.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -17,9 +16,7 @@ export class ApiKeyGuard implements CanActivate {
     private readonly apiKeysService: ApiKeysService,
     private readonly prismaService: PrismaService,
   ) {}
-  async canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const key = this.extractKeyFromHeader(request);
     if (!key) {
