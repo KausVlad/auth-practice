@@ -4,6 +4,7 @@ import { SignUpDto } from './dto/sign-up.dto';
 import { Auth } from '../decorators/auth.decorator';
 import { EnumAuthType } from '../enums/auth-type.enum';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { SignInDto } from './dto/sign-in.dto';
 
 @Auth(EnumAuthType.None)
 @Controller('authentication')
@@ -17,7 +18,7 @@ export class AuthenticationController {
 
   @HttpCode(HttpStatus.OK)
   @Post('signIn')
-  signIn(@Body() signInDto: SignUpDto) {
+  signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto);
   }
 

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { HashingService } from './hashing/hashing.service';
 import { BcryptService } from './hashing/bcrypt.service';
 import { AuthenticationController } from './authentication/authentication.controller';
@@ -14,6 +14,13 @@ import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.stora
 import { RolesGuard } from './authorization/guards/roles.guard';
 import { ApiKeysService } from './authentication/api-keys.service';
 import { ApiKeyGuard } from './authentication/guards/api-key/api-key.guard';
+import { SessionAuthenticationService } from './authentication/session-authentication.service';
+import { SessionAuthenticationController } from './authentication/session-authentication.controller';
+import * as session from 'express-session';
+import * as passport from 'passport';
+import { UserSerializer } from './authentication/serializers/user-serializer';
+import * as createRedisStore from 'connect-redis';
+import Redis from 'ioredis';
 
 @Module({
   imports: [
@@ -40,7 +47,32 @@ import { ApiKeyGuard } from './authentication/guards/api-key/api-key.guard';
     RefreshTokenIdsStorage,
     AuthenticationService,
     ApiKeysService,
+    SessionAuthenticationService,
+    UserSerializer,
   ],
-  controllers: [AuthenticationController],
+  controllers: [AuthenticationController, SessionAuthenticationController],
 })
-export class IamModule {}
+export class IamModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    const RedisStore = createRedisStore(session);
+
+    consumer
+      .apply(
+        session({
+          store: new RedisStore({
+            client: new Redis(process.env.REDIS),
+          }),
+          secret: process.env.SESSION_SECRET,
+          resave: false,
+          saveUninitialized: false,
+          cookie: {
+            httpOnly: true,
+            sameSite: true,
+          },
+        }),
+        passport.initialize(),
+        passport.session(),
+      )
+      .forRoutes('*');
+  }
+}
